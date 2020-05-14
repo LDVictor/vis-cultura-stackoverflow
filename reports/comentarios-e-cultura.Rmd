@@ -17,6 +17,8 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(forcats)
+library(hrbrthemes)
+library(ggExtra)
 ##source(here::here("code/lib.R"))
 theme_set(theme_bw())
 
@@ -57,18 +59,87 @@ Como queremos analisar a relação entre a proporção de pessoas no país que c
 
 ```{r echo=TRUE}
 dados %>% 
-  ggplot(aes(x = comentaram_prop, y = PDI, colour = Internet, size = usuarios)) +
-  geom_point() +
-  labs(x = "Proporção de comentários", y = "PDI", colour = "Proporção de pessoas com acesso à Internet", size = "Tamanho da base de dados", title = "Relação entre proporção de comentários e PDI")
+  ggplot(aes(x = comentaram_prop, y = PDI, fill = Internet, size = usuarios)) +
+  geom_point(alpha=0.5, shape=21) +
+  theme_ipsum() +
+  labs(x = "Proporção de comentários", y = "PDI", title = "Relação entre proporção de comentários e PDI") +
+  theme(legend.position= "bottom")
 ```
 
-
+Pelo gráfico acima, percebemos que países que possuem uma proporção de comentários maior tendem a ter um PDI menor. Também podemos ver que países que possuem maior proporção de comentários e menor PDI tendem a ter uma maior proporção de pessoas com acesso à internet (mais próximos de 100%). Por fim, nada podemos afirmar sobre o tamanho da base de dados, que parece não influenciar nenhuma variável.
 
 ## Outras formas de ver
 
-Em seguida, faça 5 visualizações que usem as mesmas variáveis e também pontos, mas que sejam **menos eficazes** que a que você escolheu acima. 
+### Em seguida, faça 5 visualizações que usem as mesmas variáveis e também pontos, mas que sejam **menos eficazes** que a que você escolheu acima. 
+
+Outros tipos de visualizações podem ser feitos com os mesmos dados, mas serão menos eficazes, como:
+
+1. Gráfico em linhas
+
+```{r echo=TRUE}
+dados %>% 
+  ggplot(aes(x = comentaram_prop, y = PDI, colour = Internet, size = usuarios)) +
+  geom_line() +
+  labs(x = "Proporção de comentários", y = "PDI", colour = "Proporção de pessoas com acesso à Internet", size = "Tamanho da base de dados", title = "Relação entre proporção de comentários e PDI")
+```
+
+Percebam que não há como diferenciar muito o gráfico, especialmente o tamanho da base de dados que tornou-se pouco legível no gráfico.
+
+2. Scatterplot com dados invertidos
+
+```{r echo=TRUE}
+dados %>% 
+  ggplot(aes(x = Internet, y = usuarios, fill = comentaram_prop, size = PDI)) +
+  geom_point(alpha=0.5, shape=21) +
+  theme_ipsum() +
+  labs(x = "Internet", y = "Usuários", title = "Relação entre proporção de comentários e PDI") +
+  theme(legend.position= "bottom")
+```
+
+O mesmo tipo de gráfico da questão anterior pode ser usado, entretanto com os dados secundários nos eixos X e Y, e os dados primários como legendas no gráfico. Essa visualização não é recomendável pois, por mais que mostre os dados, não foca na relação entre as variáveis primárias, isto é `comentaram_prop` e `PDI`.
+
+3. Scatterplot com histograma marginal
+
+```{r echo=TRUE}
+grafico <- ggplot(dados, aes(x=comentaram_prop, y=PDI, color=Internet, size=usuarios)) +
+      geom_point() +
+      theme(legend.position="bottom")
+ 
+ggMarginal(grafico, type="histogram")
+```
+
+Apesar de parecer com o gráfico da primeira questão, o histograma margina não acrescenta muita coisa e acaba poluindo visualmente o gráfico.
+
+4. Histograma de densidade 2D
+
+```{r echo=TRUE}
+dados %>%
+  ggplot(aes(x=comentaram_prop, y=PDI, colour = Internet, size = usuarios)) +
+  geom_bin2d(bins = 70) +
+  scale_fill_continuous(type = "viridis") +
+  theme_bw()
+```
+
+Até podemos associar a contagem da densidade com a base de usuários, mas esse tipo de gráfico não nos ajuda em nada neste cenário.
+
+5. Scatterplot conectado
+
+```{r echo=TRUE}
+dados %>%
+  tail(121) %>%
+  ggplot(aes(comentaram_prop, y=PDI, colour = Internet, size = usuarios)) +
+    geom_line(color="grey") +
+    geom_point(shape=21, size=6) +
+    theme_ipsum()
+```
+
+Se adicionarmos ao tail o número de observações que possuem os dados, o gráfico estará correto do ponto de vista de corretude. Entretanto, ficará muito poluído de forma que não podemos observar praticamente nada.
 
 ## Bônus
 
-Inclua o continente dos países (`six_regions`) na visualização.
+### Inclua o continente dos países (`six_regions`) na visualização.
+
+```{r echo=TRUE}
+## ainda falta fazer
+```
 
