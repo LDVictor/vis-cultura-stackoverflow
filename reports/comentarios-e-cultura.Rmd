@@ -49,24 +49,21 @@ Estamos interessados na relação entre quanto as pessoas de diferentes países 
 
 Considerando essa variável, queremos examinar a relação entre ela e o quão hierárquicas são as relações em um país (`PDI`). Queremos também levar em conta o quanto as pessoas daquele país têm acesso à Internet (`Internet`) e qual o tamanho da base de dados que detectamos daquele país (`usuarios`). 
 
--> Relação entre PDI e comentaram_prop, também investigando Internet e usuarios
-
 ## Examinando essa relação
 
 ### Faça uma visualização que usa os princípios de eficácia no projeto de visualizações para facilitar as comparações que você acha que são as mais importantes para entendermos esse contexto. 
 
-Como queremos analisar a relação entre a proporção de pessoas no país que comentou questões dos outros e o quão hierárquicas são elas, incluindo a proporção de pessoas que têm acesso à Internet e o tamanho da base de dados do país, iremos criar uma visualização que dê para enxergar a relação entre as variáveis `comentaram_prop` e `PDI`, com `Internet` e `usuarios` como variáveis auxiliares.
+Como queremos analisar a relação entre a proporção de pessoas no país que comentou questões dos outros e o quão hierárquicas são elas, incluindo a proporção de pessoas que têm acesso à Internet e o tamanho da base de dados do país, iremos criar uma visualização que dê para enxergar a relação entre as variáveis `comentaram_prop` e `PDI`, nos eixos X e Y respectivamente, com `Internet` e `usuarios` como variáveis auxiliares, através dos valores de cor e tamanho, respectivamente..
 
-```{r echo=TRUE}
+```{r echo=TRUE, fig.width = 9, fig.height = 5}
 dados %>% 
   ggplot(aes(x = comentaram_prop, y = PDI, fill = Internet, size = usuarios)) +
   geom_point(alpha=0.5, shape=21) +
-  theme_ipsum() +
-  labs(x = "Proporção de comentários", y = "PDI", title = "Relação entre proporção de comentários e PDI") +
-  theme(legend.position= "bottom")
+  labs(x = "Proporção de comentários", y = "PDI", size = "Tamanho da base de usuários", fill = "Porcentagem de acesso à Internet", title = "Relação entre proporção de comentários e PDI") +
+  theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Pelo gráfico acima, percebemos que países que possuem uma proporção de comentários maior tendem a ter um PDI menor. Também podemos ver que países que possuem maior proporção de comentários e menor PDI tendem a ter uma maior proporção de pessoas com acesso à internet (mais próximos de 100%). Por fim, nada podemos afirmar sobre o tamanho da base de dados, que parece não influenciar nenhuma variável.
+Pelo gráfico acima, percebemos que países que possuem uma proporção de comentários maior tendem a ter um PDI menor. Também podemos ver que países que possuem maior proporção de comentários e menor PDI tendem a ter uma maior proporção de pessoas com acesso à Internet (mais próximos de 100%). Por fim, o tamanho da base de dados parece ser maior a medida que a proporção de comentários é maior, o PDI menor e o acesso à Internet é maior.
 
 ## Outras formas de ver
 
@@ -76,70 +73,81 @@ Outros tipos de visualizações podem ser feitos com os mesmos dados, mas serão
 
 1. Gráfico em linhas
 
-```{r echo=TRUE}
+```{r echo=TRUE, fig.width = 9, fig.height = 5}
 dados %>% 
   ggplot(aes(x = comentaram_prop, y = PDI, colour = Internet, size = usuarios)) +
   geom_line() +
-  labs(x = "Proporção de comentários", y = "PDI", colour = "Proporção de pessoas com acesso à Internet", size = "Tamanho da base de dados", title = "Relação entre proporção de comentários e PDI")
+  labs(x = "Proporção de comentários", y = "PDI", size = "Tamanho da base de usuários", colour = "Porcentagem de acesso à Internet", title = "Relação entre proporção de comentários e PDI") +
+  theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Percebam que não há como diferenciar muito o gráfico, especialmente o tamanho da base de dados que tornou-se pouco legível no gráfico.
+Percebam que apesar de se tratar das mesmas variáveis da visualização anterior, não há como diferenciar muito o gráfico, especialmente o tamanho da base de dados que tornou-se pouco legível nas linhas deste gráfico, sendo uma má escolha para representar estes dados.
 
 2. Scatterplot com dados invertidos
 
-```{r echo=TRUE}
+```{r echo=TRUE, fig.width = 9, fig.height = 5}
 dados %>% 
   ggplot(aes(x = Internet, y = usuarios, fill = comentaram_prop, size = PDI)) +
   geom_point(alpha=0.5, shape=21) +
-  theme_ipsum() +
-  labs(x = "Internet", y = "Usuários", title = "Relação entre proporção de comentários e PDI") +
-  theme(legend.position= "bottom")
+  labs(x = "Internet", y = "Usuários", fill = "Proporção de comentários", title = "Relação entre proporção de comentários e PDI") + 
+  theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-O mesmo tipo de gráfico da questão anterior pode ser usado, entretanto com os dados secundários nos eixos X e Y, e os dados primários como legendas no gráfico. Essa visualização não é recomendável pois, por mais que mostre os dados, não foca na relação entre as variáveis primárias, isto é `comentaram_prop` e `PDI`.
+O mesmo tipo de gráfico da questão anterior pode ser usado, entretanto com os dados auxiliares nos eixos X e Y, e os dados primários como legendas no gráfico. Essa visualização não é recomendável pois, por mais que mostre os mesmos dados, não foca na relação entre as variáveis primárias, isto é `comentaram_prop` e `PDI`, se tornando uma escolha não muito útil para a análise que queremos fazer.
 
 3. Scatterplot com histograma marginal
 
-```{r echo=TRUE}
+```{r echo=TRUE, fig.width = 8, fig.height = 7}
 grafico <- ggplot(dados, aes(x=comentaram_prop, y=PDI, color=Internet, size=usuarios)) +
-      geom_point() +
-      theme(legend.position="bottom")
- 
+      geom_point(alpha=0.5) +
+      labs(x = "Proporção de comentários", y = "PDI", size = "Tamanho da base de usuários", colour = "Porcentagem de acesso à Internet", title = "Relação entre proporção de comentários e PDI") +
+    theme(legend.position = "bottom", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
+
 ggMarginal(grafico, type="histogram")
 ```
 
-Apesar de parecer com o gráfico da primeira questão, o histograma margina não acrescenta muita coisa e acaba poluindo visualmente o gráfico.
+Apesar de parecer um pouco com o gráfico da primeira questão, o histograma marginal que é acrescido ao gráfico não acrescenta muita coisa e acaba criando uma poluição visual desnecessária para realizar a análise que precisamos.
 
 4. Histograma de densidade 2D
 
-```{r echo=TRUE}
+```{r echo=TRUE, fig.width = 7, fig.height = 5}
 dados %>%
   ggplot(aes(x=comentaram_prop, y=PDI, colour = Internet, size = usuarios)) +
   geom_bin2d(bins = 70) +
   scale_fill_continuous(type = "viridis") +
-  theme_bw()
+  theme_bw() +
+  labs(x = "Proporção de comentários", y = "PDI", title = "Relação entre proporção de comentários e PDI") +
+  theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Até podemos associar a contagem da densidade com a base de usuários, mas esse tipo de gráfico não nos ajuda em nada neste cenário.
+Neste gráfico de densidade, nós até podemos associar a contagem da densidade presente na legenda com a quantidade de usuários na base, mas esse tipo de gráfico não nos ajuda em nada no cenário avaliado.
 
 5. Scatterplot conectado
 
-```{r echo=TRUE}
+```{r echo=TRUE, fig.width = 9, fig.height = 5}
 dados %>%
   tail(121) %>%
   ggplot(aes(comentaram_prop, y=PDI, colour = Internet, size = usuarios)) +
     geom_line(color="grey") +
     geom_point(shape=21, size=6) +
-    theme_ipsum()
+    labs(x = "Proporção de comentários", y = "PDI", size = "Tamanho da base de usuários", colour = "Porcentagem de acesso à Internet", title = "Relação entre proporção de comentários e PDI") +
+    theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Se adicionarmos ao tail o número de observações que possuem os dados, o gráfico estará correto do ponto de vista de corretude. Entretanto, ficará muito poluído de forma que não podemos observar praticamente nada.
+Percebam que neste gráfico, adicionarmos ao tail o número de observações que possuem os dados, sendo assim o gráfico estará correto do ponto de vista de corretude. Entretanto, o mesmo se torna muito poluído de forma que não podemos observar praticamente nada.
 
 ## Bônus
 
 ### Inclua o continente dos países (`six_regions`) na visualização.
 
-```{r echo=TRUE}
-## ainda falta fazer
+Usaremos como base a primeira visualização que fizemos, isto é, a mais eficaz, que seria o scatterplot inicial.
+
+```{r echo=TRUE, fig.width = 9, fig.height = 5}
+dados %>% 
+  ggplot(aes(x = comentaram_prop, y = PDI, colour = Internet, size = usuarios, shape = six_regions)) +
+  geom_point(alpha=0.5) +
+  labs(x = "Proporção de comentários", y = "PDI", size = "Tamanho da base de usuários", colour = "Porcentagem de acesso à Internet", shape = "Região", title = "Relação entre proporção de comentários e PDI") +
+  theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
+Como a variável `six_regions` é categórica, isto é, descreve regiões, diferentemente de `usuarios` e `Internet` que eram contínuas, usamos o shape do gráfico para representar as regiões possíveis.
