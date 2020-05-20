@@ -19,7 +19,7 @@ library(tidyr)
 library(forcats)
 library(hrbrthemes)
 library(ggExtra)
-##source(here::here("code/lib.R"))
+source(here::here("code/import_data.R"))
 theme_set(theme_bw())
 
 knitr::opts_chunk$set(tidy = FALSE,
@@ -53,7 +53,7 @@ Considerando essa variável, queremos examinar a relação entre ela e o quão h
 
 ### Faça uma visualização que usa os princípios de eficácia no projeto de visualizações para facilitar as comparações que você acha que são as mais importantes para entendermos esse contexto. 
 
-Como queremos analisar a relação entre a proporção de pessoas no país que comentou questões dos outros e o quão hierárquicas são elas, incluindo a proporção de pessoas que têm acesso à Internet e o tamanho da base de dados do país, iremos criar uma visualização que dê para enxergar a relação entre as variáveis `comentaram_prop` e `PDI`, nos eixos X e Y respectivamente, com `Internet` e `usuarios` como variáveis auxiliares, através dos valores de cor e tamanho, respectivamente..
+Como queremos analisar a relação entre a proporção de pessoas no país que comentou questões dos outros e o quão hierárquicas são elas, incluindo a proporção de pessoas que têm acesso à Internet e o tamanho da base de dados do país, iremos criar uma visualização que dê para enxergar a relação entre as variáveis `comentaram_prop` e `PDI`, nos eixos X e Y respectivamente, com `Internet` e `usuarios` como variáveis auxiliares de legenda, através dos valores de cor e tamanho, respectivamente.
 
 ```{r echo=TRUE, fig.width = 9, fig.height = 5}
 dados %>% 
@@ -63,7 +63,7 @@ dados %>%
   theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Pelo gráfico acima, percebemos que países que possuem uma proporção de comentários maior tendem a ter um PDI menor. Também podemos ver que países que possuem maior proporção de comentários e menor PDI tendem a ter uma maior proporção de pessoas com acesso à Internet (mais próximos de 100%). Por fim, o tamanho da base de dados parece ser maior a medida que a proporção de comentários é maior, o PDI menor e o acesso à Internet é maior.
+Pelo gráfico acima, percebemos que países que possuem uma proporção de comentários maior tendem a ter um PDI menor. Também podemos ver que países que possuem maior proporção de comentários e menor PDI tendem a ter uma maior proporção de pessoas com acesso à Internet (mais próximos de 100%). Por fim, o tamanho da base de usuários parece ser maior a medida que a proporção de comentários é maior, o PDI menor e o acesso à Internet é maior.
 
 ## Outras formas de ver
 
@@ -89,11 +89,11 @@ Percebam que apesar de se tratar das mesmas variáveis da visualização anterio
 dados %>% 
   ggplot(aes(x = Internet, y = usuarios, fill = comentaram_prop, size = PDI)) +
   geom_point(alpha=0.5, shape=21) +
-  labs(x = "Internet", y = "Usuários", fill = "Proporção de comentários", title = "Relação entre proporção de comentários e PDI") + 
+  labs(x = "Porcentagem de acesso à Internet", y = "Tamanho da base de usuários", fill = "Proporção de comentários", title = "Relação entre proporção de comentários e PDI") + 
   theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-O mesmo tipo de gráfico da questão anterior pode ser usado, entretanto com os dados auxiliares nos eixos X e Y, e os dados primários como legendas no gráfico. Essa visualização não é recomendável pois, por mais que mostre os mesmos dados, não foca na relação entre as variáveis primárias, isto é `comentaram_prop` e `PDI`, se tornando uma escolha não muito útil para a análise que queremos fazer.
+O mesmo tipo de gráfico da questão anterior pode ser usado, entretanto com os dados auxiliares nos eixos X e Y, e os dados primários como legendas no gráfico (cor e tamanho). Essa visualização não é recomendável pois, por mais que mostre os mesmos dados, não foca na relação entre as variáveis primárias, isto é `comentaram_prop` e `PDI`. Sendo assim, a visualização acima acaba se tornando uma escolha não muito útil para a análise que queremos fazer.
 
 3. Scatterplot com histograma marginal
 
@@ -120,7 +120,7 @@ dados %>%
   theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Neste gráfico de densidade, nós até podemos associar a contagem da densidade presente na legenda com a quantidade de usuários na base, mas esse tipo de gráfico não nos ajuda em nada no cenário avaliado.
+Neste gráfico de densidade, nós até podemos associar a contagem da densidade presente na legenda com a quantidade de usuários na base, mas esse tipo de visualização não nos ajuda em nada no cenário avaliado.
 
 5. Scatterplot conectado
 
@@ -134,7 +134,7 @@ dados %>%
     theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Percebam que neste gráfico, adicionarmos ao tail o número de observações que possuem os dados, sendo assim o gráfico estará correto do ponto de vista de corretude. Entretanto, o mesmo se torna muito poluído de forma que não podemos observar praticamente nada.
+Percebam que neste gráfico, adicionamos ao tail o número de observações que possuem os dados, sendo assim o gráfico estará correto do ponto de vista de corretude. Entretanto, o mesmo se torna muito poluído e confuso, de forma que não podemos observar praticamente nada que seja útil.
 
 ## Bônus
 
@@ -150,4 +150,4 @@ dados %>%
   theme(legend.position = "right", legend.direction = "vertical", legend.text = element_text(size = 10), legend.key.size = unit(0.5,"cm"), legend.title = element_text(size = 10))
 ```
 
-Como a variável `six_regions` é categórica, isto é, descreve regiões, diferentemente de `usuarios` e `Internet` que eram contínuas, usamos o shape do gráfico para representar as regiões possíveis.
+Como a variável `six_regions` é categórica, isto é, descreve regiões, diferentemente de `usuarios` e `Internet` que eram contínuas, usamos o shape do gráfico para representar as regiões possíveis, tornando a visualização mais intuitiva. 
